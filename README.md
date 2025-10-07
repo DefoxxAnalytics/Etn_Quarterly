@@ -2,6 +2,18 @@
 
 Interactive Streamlit dashboard for procurement supplier spend analysis with Docker containerization.
 
+**🔗 GitHub Repository**: https://github.com/DefoxxAnalytics/Etn_Quarterly
+
+---
+
+## 📥 Installation
+
+### Clone the Repository
+```bash
+git clone https://github.com/DefoxxAnalytics/Etn_Quarterly.git
+cd Etn_Quarterly
+```
+
 ---
 
 ## 🐳 Quick Start with Docker (Recommended)
@@ -9,10 +21,10 @@ Interactive Streamlit dashboard for procurement supplier spend analysis with Doc
 ### Prerequisites
 - [Docker Desktop](https://www.docker.com/products/docker-desktop) installed
 - Docker Compose (included with Docker Desktop)
+- Git (for cloning the repository)
 
 ### 1. Build and Run
 ```bash
-cd analytics_app
 docker-compose up -d
 ```
 
@@ -493,12 +505,30 @@ Internal use only - Proprietary
 
 ---
 
+## 🔗 Repository Information
+
+**GitHub**: https://github.com/DefoxxAnalytics/Etn_Quarterly
+**Clone Command**: `git clone https://github.com/DefoxxAnalytics/Etn_Quarterly.git`
+
+### Contributing
+This is an internal project. For issues or feature requests, please contact the Procurement Analytics Team.
+
+### Version Control
+- **Branch**: main
+- **Latest Commit**: Initial release v1.0.0
+- **CI/CD**: Docker-based deployment
+
+---
+
+## 📊 Project Statistics
+
 **Version:** 1.0.0
 **Last Updated:** 2025-10-07
 **Status:** ✅ Production Ready - All Features Complete
 **Pages:** 7 (Home + 6 analysis pages)
 **Total Code:** 3,900+ lines across 14 Python files
 **Container Status:** Healthy and Running
+**Repository**: https://github.com/DefoxxAnalytics/Etn_Quarterly
 **Maintained By:** Procurement Analytics Team
 
 ---
