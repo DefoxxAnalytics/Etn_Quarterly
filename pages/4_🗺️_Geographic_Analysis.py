@@ -52,6 +52,15 @@ with col2:
 # Load data
 df = load_data()
 
+# Early data validation
+if df.empty:
+    st.error("❌ No data available. Please check if the data file is loaded correctly.")
+    st.stop()
+
+if 'PO Order Date' not in df.columns or CATEGORY_COLUMN not in df.columns:
+    st.error("❌ Required columns missing from dataset.")
+    st.stop()
+
 # Sidebar - Filters
 st.sidebar.header("🔍 Filters")
 

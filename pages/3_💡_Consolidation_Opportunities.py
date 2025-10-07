@@ -24,11 +24,12 @@ st.markdown("""
         margin-bottom: 0.5rem;
     }
     .opportunity-card {
-        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        background: #2c5282;
         padding: 1.5rem;
         border-radius: 10px;
         color: white;
         margin-bottom: 1rem;
+        border-left: 5px solid #4299e1;
     }
     .savings-highlight {
         background: #d4edda;
@@ -57,6 +58,15 @@ with col2:
 
 # Load data
 df = load_data()
+
+# Early data validation
+if df.empty:
+    st.error("❌ No data available. Please check if the data file is loaded correctly.")
+    st.stop()
+
+if 'PO Order Date' not in df.columns:
+    st.error("❌ Required columns missing from dataset.")
+    st.stop()
 
 # Sidebar - Configuration
 st.sidebar.header("⚙️ Configuration")
@@ -195,7 +205,7 @@ if len(opportunities) > 0:
         with col1:
             st.markdown("#### By Category")
             category_summary = opportunities.groupby(
-                opportunities.index.to_series().apply(lambda x: filtered_df[filtered_df['SubCategory'] == x][CATEGORY_COLUMN].mode()[0] if len(filtered_df[filtered_df['SubCategory'] == x]) > 0 else 'Unknown')
+                opportunities['SubCategory'].apply(lambda x: filtered_df[filtered_df['SubCategory'] == x][CATEGORY_COLUMN].mode()[0] if len(filtered_df[filtered_df['SubCategory'] == x]) > 0 else 'Unknown')
             ).agg({
                 'Total Spend': 'sum',
                 'Potential Savings': 'sum',
@@ -214,10 +224,12 @@ if len(opportunities) > 0:
         with col2:
             st.markdown("#### Savings Distribution")
             # Pie chart of savings by category
+            category_chart_data = category_summary.reset_index()
+            category_chart_data.columns = ['Category', 'Total Spend', 'Potential Savings', 'Suppliers']
             fig_pie = px.pie(
-                category_summary.reset_index(),
+                category_chart_data,
                 values='Potential Savings',
-                names='index',
+                names='Category',
                 title='Savings Potential by Category'
             )
             st.plotly_chart(fig_pie, use_container_width=True)
@@ -266,7 +278,7 @@ if len(opportunities) > 0:
                 showscale=True,
                 colorbar=dict(title="Savings ($)")
             ),
-            text=opportunities.index,
+            text=opportunities['SubCategory'],
             textposition='top center',
             hovertemplate='<b>%{text}</b><br>' +
                           'Suppliers: %{x}<br>' +
@@ -297,17 +309,21 @@ if len(opportunities) > 0:
         st.subheader("🔬 Deep Dive Analysis")
 
         # Select a subcategory to analyze
-        selected_subcategory = st.selectbox(
-            "Select Subcategory to Analyze",
-            options=opportunities.index.tolist()
-        )
+        if len(opportunities) > 0:
+            selected_subcategory = st.selectbox(
+                "Select Subcategory to Analyze",
+                options=opportunities['SubCategory'].tolist(),
+                index=0
+            )
+        else:
+            selected_subcategory = None
 
-        if selected_subcategory:
+        if selected_subcategory and len(opportunities) > 0:
             # Filter data for selected subcategory
             subcat_data = filtered_df[filtered_df['SubCategory'] == selected_subcategory]
 
             # Get metrics
-            opp_metrics = opportunities.loc[selected_subcategory]
+            opp_metrics = opportunities[opportunities['SubCategory'] == selected_subcategory].iloc[0]
 
             # Display opportunity card
             st.markdown(f"""
@@ -331,23 +347,31 @@ if len(opportunities) > 0:
 
                 supplier_spend['% of Total'] = (supplier_spend['Total Spend'] / supplier_spend['Total Spend'].sum() * 100).round(1)
 
-                # Format for display
-                display_suppliers = supplier_spend.copy()
-                display_suppliers['Total Spend'] = display_suppliers['Total Spend'].apply(format_currency)
-                display_suppliers['% of Total'] = display_suppliers['% of Total'].astype(str) + '%'
+                if len(supplier_spend) > 0:
+                    # Format for display
+                    display_suppliers = supplier_spend.copy()
+                    display_suppliers['Total Spend'] = display_suppliers['Total Spend'].apply(format_currency)
+                    display_suppliers['% of Total'] = display_suppliers['% of Total'].astype(str) + '%'
 
-                st.dataframe(display_suppliers, use_container_width=True)
+                    st.dataframe(display_suppliers, use_container_width=True)
+                else:
+                    st.info("No supplier data available for this subcategory.")
 
             with col2:
                 st.markdown("#### Spend Distribution")
-                # Pie chart of suppliers
-                fig_suppliers = px.pie(
-                    supplier_spend.reset_index(),
-                    values='Total Spend',
-                    names=SUPPLIER_COLUMN,
-                    title=f'Supplier Spend - {selected_subcategory}'
-                )
-                st.plotly_chart(fig_suppliers, use_container_width=True)
+                if len(supplier_spend) > 0:
+                    # Create pie chart with original numeric values
+                    supplier_spend_chart = supplier_spend.reset_index()
+                    fig_suppliers = px.pie(
+                        supplier_spend_chart,
+                        values='Total Spend',
+                        names=SUPPLIER_COLUMN,
+                        title=f'Supplier Spend - {selected_subcategory}'
+                    )
+                    fig_suppliers.update_traces(textposition='inside', textinfo='percent+label')
+                    st.plotly_chart(fig_suppliers, use_container_width=True)
+                else:
+                    st.info("No spend data available to visualize.")
 
             # Consolidation scenario builder
             st.markdown("---")

@@ -175,7 +175,7 @@ with col1:
         - Filterable by date range and category
         """)
 
-    with st.expander("🔍 **Supplier Explorer** (Coming Soon)", expanded=False):
+    with st.expander("🔍 **Supplier Explorer**", expanded=False):
         st.markdown("""
         Search and analyze individual suppliers:
         - Search by supplier name
@@ -184,7 +184,7 @@ with col1:
         - See detailed supplier profiles
         """)
 
-    with st.expander("💡 **Consolidation Opportunities** (Coming Soon)", expanded=False):
+    with st.expander("💡 **Consolidation Opportunities**", expanded=False):
         st.markdown("""
         Identify cost savings potential:
         - Find categories with multiple suppliers
@@ -194,7 +194,7 @@ with col1:
         """)
 
 with col2:
-    with st.expander("🌎 **Geographic Analysis** (Coming Soon)", expanded=False):
+    with st.expander("🌎 **Geographic Analysis**", expanded=False):
         st.markdown("""
         State-by-state spending analysis:
         - Interactive US heat map
@@ -203,7 +203,7 @@ with col2:
         - Regional consolidation opportunities
         """)
 
-    with st.expander("📂 **Category Deep Dive** (Coming Soon)", expanded=False):
+    with st.expander("📂 **Category Deep Dive**", expanded=False):
         st.markdown("""
         Category and subcategory analysis:
         - Hierarchical category view
@@ -212,7 +212,7 @@ with col2:
         - Bundling opportunities
         """)
 
-    with st.expander("📋 **Custom Reports** (Coming Soon)", expanded=False):
+    with st.expander("📋 **Custom Reports**", expanded=False):
         st.markdown("""
         Build custom reports:
         - Apply custom filters

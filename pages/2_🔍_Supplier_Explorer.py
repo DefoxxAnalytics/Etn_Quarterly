@@ -51,6 +51,11 @@ with col2:
 # Load data
 df = load_data()
 
+# Early data validation
+if df.empty:
+    st.error("❌ No data available. Please check if the data file is loaded correctly.")
+    st.stop()
+
 # Sidebar - Search and Filters
 st.sidebar.header("🔍 Search & Filters")
 
