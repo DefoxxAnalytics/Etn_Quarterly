@@ -36,8 +36,9 @@ CATEGORY_COLUMN = 'Category'
 
 # State columns - IMPORTANT DISTINCTION
 SHIP_TO_STATE_COLUMN = 'State'  # Where items are shipped TO
-SUPPLIER_LOCATION_COLUMN = 'Supplier City/State'  # Where supplier is located
-STATE_COLUMN = 'Supplier State'  # Extracted from Supplier City/State (created by data_loader)
+SUPPLIER_CITY_COLUMN = 'SupplierCity'  # Supplier city (from CSV)
+SUPPLIER_STATE_COLUMN = 'SupplierState'  # Supplier state (from CSV)
+STATE_COLUMN = 'SupplierState'  # Alias for backward compatibility
 
 # ======================
 # Analysis Configuration

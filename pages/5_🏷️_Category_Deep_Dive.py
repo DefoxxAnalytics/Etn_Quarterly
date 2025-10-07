@@ -62,7 +62,7 @@ if df.empty:
     st.error("❌ No data available. Please check if the data file is loaded correctly.")
     st.stop()
 
-if DATE_COLUMN not in df.columns or 'Supplier State' not in df.columns:
+if DATE_COLUMN not in df.columns or 'SupplierState' not in df.columns:
     st.error("❌ Required columns missing from dataset.")
     st.stop()
 
@@ -80,7 +80,7 @@ date_range = st.sidebar.date_input(
 )
 
 # State filter
-all_states = sorted(df['Supplier State'].dropna().unique())
+all_states = sorted(df['SupplierState'].dropna().unique())
 selected_states = st.sidebar.multiselect("Filter by State", options=all_states)
 
 # Category filter
@@ -312,7 +312,7 @@ with tab2:
         st.markdown("---")
         st.markdown("#### Geographic Distribution")
 
-        state_spend = category_data.groupby('Supplier State')[AMOUNT_COLUMN].sum().sort_values(ascending=False).head(10)
+        state_spend = category_data.groupby('SupplierState')[AMOUNT_COLUMN].sum().sort_values(ascending=False).head(10)
 
         if len(state_spend) > 0:
             fig_states = go.Figure(data=[

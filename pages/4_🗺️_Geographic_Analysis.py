@@ -171,14 +171,14 @@ with tab2:
 
     if len(states_to_compare) > 0:
         # Filter data for selected states
-        comparison_df = filtered_df[filtered_df['Supplier State'].isin(states_to_compare)]
+        comparison_df = filtered_df[filtered_df['SupplierState'].isin(states_to_compare)]
 
         # Metrics comparison
         st.markdown("#### Key Metrics Comparison")
 
         comparison_metrics = []
         for state in states_to_compare:
-            state_data = comparison_df[comparison_df['Supplier State'] == state]
+            state_data = comparison_df[comparison_df['SupplierState'] == state]
             comparison_metrics.append({
                 'State': state,
                 'Total Spend': state_data[AMOUNT_COLUMN].sum(),
@@ -239,15 +239,15 @@ with tab2:
         # Category breakdown by state
         st.markdown("#### Category Breakdown by State")
 
-        category_by_state = comparison_df.groupby(['Supplier State', CATEGORY_COLUMN])[AMOUNT_COLUMN].sum().reset_index()
+        category_by_state = comparison_df.groupby(['SupplierState', CATEGORY_COLUMN])[AMOUNT_COLUMN].sum().reset_index()
 
         fig_category = px.bar(
             category_by_state,
-            x='Supplier State',
+            x='SupplierState',
             y=AMOUNT_COLUMN,
             color=CATEGORY_COLUMN,
             title="Spend by Category and State",
-            labels={AMOUNT_COLUMN: "Spend ($)", 'Supplier State': 'State'},
+            labels={AMOUNT_COLUMN: "Spend ($)", 'SupplierState': 'State'},
             height=500
         )
         st.plotly_chart(fig_category, use_container_width=True)
@@ -266,14 +266,14 @@ with tab3:
     """, unsafe_allow_html=True)
 
     # Find suppliers in multiple states
-    supplier_states = filtered_df.groupby(SUPPLIER_COLUMN)['Supplier State'].apply(
+    supplier_states = filtered_df.groupby(SUPPLIER_COLUMN)['SupplierState'].apply(
         lambda x: list(x.dropna().unique())
     ).reset_index()
-    supplier_states['State Count'] = supplier_states['Supplier State'].apply(len)
+    supplier_states['State Count'] = supplier_states['SupplierState'].apply(len)
 
     # Get multi-state suppliers
     multi_state_suppliers = supplier_states[supplier_states['State Count'] > 1].copy()
-    multi_state_suppliers['States'] = multi_state_suppliers['Supplier State'].apply(lambda x: ', '.join(sorted(x)))
+    multi_state_suppliers['States'] = multi_state_suppliers['SupplierState'].apply(lambda x: ', '.join(sorted(x)))
 
     # Add spend data
     supplier_spend = filtered_df.groupby(SUPPLIER_COLUMN)[AMOUNT_COLUMN].sum()
@@ -388,7 +388,7 @@ with tab4:
                 return region
         return 'Other'
 
-    filtered_df['Region'] = filtered_df['Supplier State'].apply(get_region)
+    filtered_df['Region'] = filtered_df['SupplierState'].apply(get_region)
 
     # Regional metrics
     regional_spend = filtered_df.groupby('Region')[AMOUNT_COLUMN].sum().sort_values(ascending=False)

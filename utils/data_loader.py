@@ -41,9 +41,19 @@ def load_data(file_path=None):
         df[AMOUNT_COLUMN] = pd.to_numeric(df[AMOUNT_COLUMN], errors='coerce')
         df[DATE_COLUMN] = pd.to_datetime(df[DATE_COLUMN], errors='coerce')
 
-        # Extract supplier state from "City, State" format
-        if 'Supplier City/State' in df.columns:
-            df[STATE_COLUMN] = df['Supplier City/State'].str.split(',').str[-1].str.strip()
+        # Handle supplier location columns
+        # New format: SupplierCity and SupplierState are separate columns
+        # Legacy format: Extract from 'Supplier City/State' if new columns don't exist
+        if 'SupplierState' not in df.columns and 'Supplier City/State' in df.columns:
+            # Legacy support: Extract from combined column
+            df['SupplierState'] = df['Supplier City/State'].str.split(',').str[-1].str.strip()
+            df['SupplierCity'] = df['Supplier City/State'].str.split(',').str[0].str.strip()
+
+        # Ensure columns exist even if data is missing
+        if 'SupplierState' not in df.columns:
+            df['SupplierState'] = None
+        if 'SupplierCity' not in df.columns:
+            df['SupplierCity'] = None
 
         # Add date components for easier filtering/grouping
         df['Year'] = df[DATE_COLUMN].dt.year
@@ -91,6 +101,7 @@ def get_data_summary(df):
             'unique_pos': 0,
             'unique_suppliers': 0,
             'unique_states': 0,
+            'unique_cities': 0,
             'date_min': None,
             'date_max': None,
             'categories': 0,
@@ -102,7 +113,8 @@ def get_data_summary(df):
         'total_records': len(df),
         'unique_pos': df['VSTX PO #'].nunique() if 'VSTX PO #' in df.columns else 0,
         'unique_suppliers': df[SUPPLIER_COLUMN].nunique(),
-        'unique_states': df[STATE_COLUMN].nunique(),
+        'unique_states': df[STATE_COLUMN].nunique() if STATE_COLUMN in df.columns else 0,
+        'unique_cities': df['SupplierCity'].nunique() if 'SupplierCity' in df.columns else 0,
         'date_min': df[DATE_COLUMN].min(),
         'date_max': df[DATE_COLUMN].max(),
         'categories': df['Category'].nunique() if 'Category' in df.columns else 0,

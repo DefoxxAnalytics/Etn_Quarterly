@@ -94,8 +94,8 @@ else:
     selected_subcategories = []
 
 # State filter
-if 'Supplier State' in df.columns:
-    all_states = sorted(df['Supplier State'].dropna().unique())
+if 'SupplierState' in df.columns:
+    all_states = sorted(df['SupplierState'].dropna().unique())
     selected_states = st.sidebar.multiselect(
         "States",
         options=all_states,

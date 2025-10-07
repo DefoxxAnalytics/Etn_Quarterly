@@ -116,7 +116,7 @@ selected_subcategories = st.sidebar.multiselect(
 
 selected_states = st.sidebar.multiselect(
     "States",
-    options=sorted(df['Supplier State'].dropna().unique())
+    options=sorted(df['SupplierState'].dropna().unique())
 )
 
 selected_suppliers = st.sidebar.multiselect(
@@ -304,7 +304,7 @@ elif report_type == "Geographic Analysis":
 
     # Suppliers by state
     st.markdown("#### Supplier Count by State")
-    suppliers_by_state = filtered_df.groupby('Supplier State')[SUPPLIER_COLUMN].nunique().sort_values(ascending=False)
+    suppliers_by_state = filtered_df.groupby('SupplierState')[SUPPLIER_COLUMN].nunique().sort_values(ascending=False)
 
     supplier_state_df = pd.DataFrame({
         'State': suppliers_by_state.index,
@@ -359,7 +359,7 @@ elif report_type == "Custom Query":
 
     # Column selection
     available_columns = [
-        'PO Number', 'PO Order Date', SUPPLIER_COLUMN, 'Supplier State',
+        'PO Number', 'PO Order Date', SUPPLIER_COLUMN, 'SupplierState',
         CATEGORY_COLUMN, 'SubCategory', AMOUNT_COLUMN, 'PO Status',
         'Year', 'Month', 'Quarter'
     ]

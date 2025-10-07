@@ -88,7 +88,7 @@ selected_subcategories = st.sidebar.multiselect(
 )
 
 # Filter by states
-all_states = sorted(df['Supplier State'].dropna().unique())
+all_states = sorted(df['SupplierState'].dropna().unique())
 selected_states = st.sidebar.multiselect("Filter by State", options=all_states)
 
 # Date range filter
@@ -193,7 +193,7 @@ with col_detail:
         st.markdown(f"""
         <div class="supplier-card">
             <h2>{selected_supplier}</h2>
-            <p><strong>Primary State:</strong> {supplier_data['Supplier State'].mode()[0] if len(supplier_data['Supplier State'].mode()) > 0 else 'N/A'}</p>
+            <p><strong>Primary State:</strong> {supplier_data['SupplierState'].mode()[0] if len(supplier_data['SupplierState'].mode()) > 0 else 'N/A'}</p>
         </div>
         """, unsafe_allow_html=True)
 
@@ -259,7 +259,7 @@ with col_detail:
 
         with tab3:
             st.markdown("#### Geographic Distribution")
-            state_spend = supplier_data.groupby('Supplier State')[AMOUNT_COLUMN].sum().sort_values(ascending=False)
+            state_spend = supplier_data.groupby('SupplierState')[AMOUNT_COLUMN].sum().sort_values(ascending=False)
 
             if len(state_spend) > 0:
                 # Create bar chart
