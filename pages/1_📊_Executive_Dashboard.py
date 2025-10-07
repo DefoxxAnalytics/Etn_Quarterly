@@ -105,6 +105,26 @@ if 'SupplierState' in df.columns:
 else:
     selected_states = []
 
+# City filter (dependent on state selection)
+if 'SupplierCity' in df.columns:
+    if selected_states:
+        # Filter cities based on selected states
+        available_cities = sorted(
+            df[df['SupplierState'].isin(selected_states)]['SupplierCity'].dropna().unique()
+        )
+    else:
+        # Show all cities if no state is selected
+        available_cities = sorted(df['SupplierCity'].dropna().unique())
+
+    selected_cities = st.sidebar.multiselect(
+        "Cities",
+        options=available_cities,
+        default=available_cities,
+        help="Select cities to include in analysis"
+    )
+else:
+    selected_cities = []
+
 # PO Status filter
 if 'PO Status' in df.columns:
     all_statuses = sorted(df['PO Status'].dropna().unique())
@@ -127,6 +147,7 @@ filtered_df = filter_data(
     categories=selected_categories if selected_categories else None,
     subcategories=selected_subcategories if selected_subcategories else None,
     states=selected_states if selected_states else None,
+    cities=selected_cities if selected_cities else None,
     po_status=selected_statuses if selected_statuses else None
 )
 

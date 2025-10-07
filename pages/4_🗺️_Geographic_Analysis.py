@@ -84,6 +84,20 @@ selected_subcategories = st.sidebar.multiselect(
     help="Select subcategories to filter"
 )
 
+# State filter
+all_states = sorted(df['SupplierState'].dropna().unique()) if 'SupplierState' in df.columns else []
+selected_states = st.sidebar.multiselect("Filter by State", options=all_states)
+
+# City filter (dependent on state selection)
+if selected_states:
+    available_cities = sorted(
+        df[df['SupplierState'].isin(selected_states)]['SupplierCity'].dropna().unique()
+    ) if 'SupplierCity' in df.columns else []
+else:
+    available_cities = sorted(df['SupplierCity'].dropna().unique()) if 'SupplierCity' in df.columns else []
+
+selected_cities = st.sidebar.multiselect("Filter by City", options=available_cities)
+
 # Date filter
 min_date = df['PO Order Date'].min().date()
 max_date = df['PO Order Date'].max().date()
@@ -99,7 +113,9 @@ filtered_df = filter_data(
     df,
     date_range=date_range,
     categories=selected_categories if selected_categories else None,
-    subcategories=selected_subcategories if selected_subcategories else None
+    subcategories=selected_subcategories if selected_subcategories else None,
+    states=selected_states if selected_states else None,
+    cities=selected_cities if selected_cities else None
 )
 
 # Calculate geographic metrics

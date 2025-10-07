@@ -131,7 +131,7 @@ def get_data_summary(df):
 
 
 def filter_data(df, date_range=None, categories=None, states=None, suppliers=None,
-                subcategories=None, po_status=None):
+                subcategories=None, po_status=None, cities=None):
     """
     Apply filters to dataframe
 
@@ -143,6 +143,7 @@ def filter_data(df, date_range=None, categories=None, states=None, suppliers=Non
         suppliers: List of suppliers to include
         subcategories: List of subcategories to include
         po_status: List of PO statuses to include
+        cities: List of supplier cities to include
 
     Returns:
         pd.DataFrame: Filtered dataframe
@@ -168,6 +169,10 @@ def filter_data(df, date_range=None, categories=None, states=None, suppliers=Non
     # State filter
     if states and len(states) > 0:
         filtered_df = filtered_df[filtered_df[STATE_COLUMN].isin(states)]
+
+    # City filter
+    if cities and len(cities) > 0:
+        filtered_df = filtered_df[filtered_df['SupplierCity'].isin(cities)]
 
     # Supplier filter
     if suppliers and len(suppliers) > 0:

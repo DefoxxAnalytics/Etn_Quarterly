@@ -119,6 +119,16 @@ selected_states = st.sidebar.multiselect(
     options=sorted(df['SupplierState'].dropna().unique())
 )
 
+# City filter (dependent on state selection)
+if selected_states:
+    available_cities = sorted(
+        df[df['SupplierState'].isin(selected_states)]['SupplierCity'].dropna().unique()
+    ) if 'SupplierCity' in df.columns else []
+else:
+    available_cities = sorted(df['SupplierCity'].dropna().unique()) if 'SupplierCity' in df.columns else []
+
+selected_cities = st.sidebar.multiselect("Cities", options=available_cities)
+
 selected_suppliers = st.sidebar.multiselect(
     "Suppliers",
     options=sorted(df[SUPPLIER_COLUMN].dropna().unique())
@@ -131,6 +141,7 @@ filtered_df = filter_data(
     categories=selected_categories if selected_categories else None,
     subcategories=selected_subcategories if selected_subcategories else None,
     states=selected_states if selected_states else None,
+    cities=selected_cities if selected_cities else None,
     suppliers=selected_suppliers if selected_suppliers else None
 )
 
@@ -148,7 +159,7 @@ st.markdown("---")
 st.subheader(f"📊 {report_type} Report Preview")
 
 # Display filters applied
-if selected_categories or selected_subcategories or selected_states or selected_suppliers:
+if selected_categories or selected_subcategories or selected_states or selected_cities or selected_suppliers:
     st.markdown("**Filters Applied:**")
     if selected_categories:
         st.markdown(f"- **Categories:** {', '.join(selected_categories)}")
@@ -156,6 +167,8 @@ if selected_categories or selected_subcategories or selected_states or selected_
         st.markdown(f"- **Subcategories:** {', '.join(selected_subcategories)}")
     if selected_states:
         st.markdown(f"- **States:** {', '.join(selected_states)}")
+    if selected_cities:
+        st.markdown(f"- **Cities:** {', '.join(selected_cities)}")
     if selected_suppliers:
         st.markdown(f"- **Suppliers:** {', '.join(selected_suppliers)}")
 

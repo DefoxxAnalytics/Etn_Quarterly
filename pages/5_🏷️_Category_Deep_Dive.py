@@ -83,6 +83,16 @@ date_range = st.sidebar.date_input(
 all_states = sorted(df['SupplierState'].dropna().unique())
 selected_states = st.sidebar.multiselect("Filter by State", options=all_states)
 
+# City filter (dependent on state selection)
+if selected_states:
+    available_cities = sorted(
+        df[df['SupplierState'].isin(selected_states)]['SupplierCity'].dropna().unique()
+    ) if 'SupplierCity' in df.columns else []
+else:
+    available_cities = sorted(df['SupplierCity'].dropna().unique()) if 'SupplierCity' in df.columns else []
+
+selected_cities = st.sidebar.multiselect("Filter by City", options=available_cities)
+
 # Category filter
 all_categories = sorted(df[CATEGORY_COLUMN].dropna().unique()) if CATEGORY_COLUMN in df.columns else []
 selected_categories = st.sidebar.multiselect("Filter by Category", options=all_categories)
@@ -109,7 +119,8 @@ filtered_df = filter_data(
     date_range=date_range,
     categories=selected_categories if selected_categories else None,
     subcategories=selected_subcategories if selected_subcategories else None,
-    states=selected_states if selected_states else None
+    states=selected_states if selected_states else None,
+    cities=selected_cities if selected_cities else None
 )
 
 # Calculate category metrics
