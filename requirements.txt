@@ -1,0 +1,25 @@
+# Core Framework
+streamlit==1.31.0
+
+# Data Processing
+pandas==2.0.3
+numpy==1.24.3
+
+# Visualizations
+plotly==5.18.0
+
+# Data Tables
+streamlit-aggrid==0.3.4.post3
+
+# Excel Export
+openpyxl==3.1.2
+xlsxwriter==3.1.9
+
+# Date Handling
+python-dateutil==2.8.2
+
+# Optional: Advanced Features
+# pydeck==0.8.0                    # 3D maps
+# streamlit-option-menu==0.3.6     # Better navigation
+# psycopg2-binary==2.9.9           # PostgreSQL (future)
+# sqlalchemy==2.0.23               # Database ORM (future)

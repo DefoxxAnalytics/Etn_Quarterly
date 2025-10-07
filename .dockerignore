@@ -1,0 +1,59 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Logs
+*.log
+logs/
+
+# Documentation (not needed in container)
+*.md
+!README.md
+
+# Streamlit secrets (if using)
+.streamlit/secrets.toml
+
+# Data (will be mounted)
+data/*.csv
+data/uploads/*
+!data/.gitkeep
+!data/uploads/.gitkeep
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+test_*.py
+validate_data.py
+
+# Temporary files
+*.tmp
+.cache/
