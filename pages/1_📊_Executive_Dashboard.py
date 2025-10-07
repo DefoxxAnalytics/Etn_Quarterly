@@ -48,8 +48,6 @@ if df.empty:
     st.stop()
 
 # Sidebar filters
-st.sidebar.image("assets/vtx_logo2.png", width=200)
-st.sidebar.markdown("---")
 st.sidebar.header("🔍 Filters")
 
 # Date range filter
@@ -74,6 +72,26 @@ if 'Category' in df.columns:
     )
 else:
     selected_categories = []
+
+# Subcategory filter (dependent on category selection)
+if 'SubCategory' in df.columns:
+    if selected_categories:
+        # Filter subcategories based on selected categories
+        available_subcategories = sorted(
+            df[df['Category'].isin(selected_categories)]['SubCategory'].dropna().unique()
+        )
+    else:
+        # Show all subcategories if no category is selected
+        available_subcategories = sorted(df['SubCategory'].dropna().unique())
+
+    selected_subcategories = st.sidebar.multiselect(
+        "Subcategories",
+        options=available_subcategories,
+        default=available_subcategories,
+        help="Select subcategories to include in analysis"
+    )
+else:
+    selected_subcategories = []
 
 # State filter
 if 'Supplier State' in df.columns:
@@ -107,6 +125,7 @@ filtered_df = filter_data(
     df,
     date_range=date_range,
     categories=selected_categories if selected_categories else None,
+    subcategories=selected_subcategories if selected_subcategories else None,
     states=selected_states if selected_states else None,
     po_status=selected_statuses if selected_statuses else None
 )

@@ -71,6 +71,22 @@ else:
 all_categories = sorted(df[CATEGORY_COLUMN].dropna().unique())
 selected_categories = st.sidebar.multiselect("Filter by Category", options=all_categories)
 
+# Subcategory filter (dependent on category selection)
+if selected_categories:
+    # Filter subcategories based on selected categories
+    available_subcategories = sorted(
+        df[df[CATEGORY_COLUMN].isin(selected_categories)]['SubCategory'].dropna().unique()
+    ) if 'SubCategory' in df.columns else []
+else:
+    # Show all subcategories if no category is selected
+    available_subcategories = sorted(df['SubCategory'].dropna().unique()) if 'SubCategory' in df.columns else []
+
+selected_subcategories = st.sidebar.multiselect(
+    "Filter by Subcategory",
+    options=available_subcategories,
+    help="Select subcategories to filter"
+)
+
 # Filter by states
 all_states = sorted(df['Supplier State'].dropna().unique())
 selected_states = st.sidebar.multiselect("Filter by State", options=all_states)
@@ -90,6 +106,7 @@ filtered_df = filter_data(
     df,
     date_range=date_range,
     categories=selected_categories if selected_categories else None,
+    subcategories=selected_subcategories if selected_subcategories else None,
     states=selected_states if selected_states else None
 )
 

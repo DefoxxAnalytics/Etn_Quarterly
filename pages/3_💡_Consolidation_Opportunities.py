@@ -110,8 +110,42 @@ date_range = st.sidebar.date_input(
     max_value=max_date
 )
 
-# Apply date filter
-filtered_df = filter_data(df, date_range=date_range)
+# Category and Subcategory filters
+st.sidebar.markdown("### Filters")
+
+# Category filter
+all_categories = sorted(df[CATEGORY_COLUMN].dropna().unique()) if CATEGORY_COLUMN in df.columns else []
+selected_categories = st.sidebar.multiselect(
+    "Filter by Category",
+    options=all_categories,
+    default=None,
+    help="Select one or more categories to filter"
+)
+
+# Subcategory filter (dependent on category selection)
+if selected_categories:
+    # Filter subcategories based on selected categories
+    available_subcategories = sorted(
+        df[df[CATEGORY_COLUMN].isin(selected_categories)]['SubCategory'].dropna().unique()
+    ) if 'SubCategory' in df.columns else []
+else:
+    # Show all subcategories if no category is selected
+    available_subcategories = sorted(df['SubCategory'].dropna().unique()) if 'SubCategory' in df.columns else []
+
+selected_subcategories = st.sidebar.multiselect(
+    "Filter by Subcategory",
+    options=available_subcategories,
+    default=None,
+    help="Select one or more subcategories to filter"
+)
+
+# Apply filters
+filtered_df = filter_data(
+    df,
+    date_range=date_range,
+    categories=selected_categories if selected_categories else None,
+    subcategories=selected_subcategories if selected_subcategories else None
+)
 
 # Calculate opportunities
 opportunities = calculate_consolidation_opportunities(

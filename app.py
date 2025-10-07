@@ -62,8 +62,6 @@ st.markdown("---")
 
 # Sidebar branding
 with st.sidebar:
-    st.image("assets/vtx_logo2.png", width=200)
-    st.markdown("---")
     st.markdown("### 🧭 Navigation")
     st.markdown("Use the pages in the sidebar to explore different analytics views.")
     st.markdown("---")

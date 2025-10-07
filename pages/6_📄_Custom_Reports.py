@@ -99,6 +99,21 @@ selected_categories = st.sidebar.multiselect(
     options=sorted(df[CATEGORY_COLUMN].dropna().unique())
 )
 
+# Subcategory filter (dependent on category selection)
+if selected_categories:
+    # Filter subcategories based on selected categories
+    available_subcategories = sorted(
+        df[df[CATEGORY_COLUMN].isin(selected_categories)]['SubCategory'].dropna().unique()
+    ) if 'SubCategory' in df.columns else []
+else:
+    # Show all subcategories if no category is selected
+    available_subcategories = sorted(df['SubCategory'].dropna().unique()) if 'SubCategory' in df.columns else []
+
+selected_subcategories = st.sidebar.multiselect(
+    "Subcategories",
+    options=available_subcategories
+)
+
 selected_states = st.sidebar.multiselect(
     "States",
     options=sorted(df['Supplier State'].dropna().unique())
@@ -114,6 +129,7 @@ filtered_df = filter_data(
     df,
     date_range=date_range,
     categories=selected_categories if selected_categories else None,
+    subcategories=selected_subcategories if selected_subcategories else None,
     states=selected_states if selected_states else None,
     suppliers=selected_suppliers if selected_suppliers else None
 )
@@ -132,10 +148,12 @@ st.markdown("---")
 st.subheader(f"📊 {report_type} Report Preview")
 
 # Display filters applied
-if selected_categories or selected_states or selected_suppliers:
+if selected_categories or selected_subcategories or selected_states or selected_suppliers:
     st.markdown("**Filters Applied:**")
     if selected_categories:
         st.markdown(f"- **Categories:** {', '.join(selected_categories)}")
+    if selected_subcategories:
+        st.markdown(f"- **Subcategories:** {', '.join(selected_subcategories)}")
     if selected_states:
         st.markdown(f"- **States:** {', '.join(selected_states)}")
     if selected_suppliers:
