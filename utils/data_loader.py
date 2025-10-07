@@ -49,6 +49,14 @@ def load_data(file_path=None):
             df['SupplierState'] = df['Supplier City/State'].str.split(',').str[-1].str.strip()
             df['SupplierCity'] = df['Supplier City/State'].str.split(',').str[0].str.strip()
 
+        # Clean and standardize state codes
+        if 'SupplierState' in df.columns:
+            df['SupplierState'] = df['SupplierState'].str.strip().str.upper()
+
+        # Clean city names
+        if 'SupplierCity' in df.columns:
+            df['SupplierCity'] = df['SupplierCity'].str.strip()
+
         # Ensure columns exist even if data is missing
         if 'SupplierState' not in df.columns:
             df['SupplierState'] = None
